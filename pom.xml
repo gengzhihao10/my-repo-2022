@@ -23,6 +23,7 @@
         <module>api</module>
         <module>present</module>
         <module>business</module>
+        <module>infrastructure</module>
     </modules>
 
 
@@ -37,7 +38,7 @@
         <boot.version>1.0-SNAPSHOT</boot.version>
         <business.version>1.0-SNAPSHOT</business.version>
         <common.version>1.0-SNAPSHOT</common.version>
-        <dal.version>1.0-SNAPSHOT</dal.version>
+        <infrastructure.version>1.0-SNAPSHOT</infrastructure.version>
         <middleware.version>1.0-SNAPSHOT</middleware.version>
         <present.version>1.0-SNAPSHOT</present.version>
 
@@ -74,8 +75,8 @@
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
-                <artifactId>dal</artifactId>
-                <version>${dal.version}</version>
+                <artifactId>infrastructure</artifactId>
+                <version>${infrastructure.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
@@ -93,13 +94,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
-            </dependency>
-
-            <!--mysql连接-->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <scope>runtime</scope>
             </dependency>
 
             <!--mybatis plus-->
