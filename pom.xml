@@ -19,7 +19,6 @@
         <module>boot</module>
         <module>common</module>
         <module>middleware</module>
-        <module>dal</module>
         <module>api</module>
         <module>present</module>
         <module>business</module>
@@ -47,12 +46,13 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <mybatis-plus-boot-starter.version>3.5.1</mybatis-plus-boot-starter.version>
         <swagger.version>3.0.0</swagger.version>
-
+        <hutool-all.version>5.8.1</hutool-all.version>
     </properties>
 
     <!--所有module必须指定jar名字才能继承某个依赖-->
     <dependencyManagement>
         <dependencies>
+            <!-- 模块依赖 -->
             <dependency>
                 <groupId>org.example</groupId>
                 <artifactId>common</artifactId>
@@ -121,6 +121,13 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-all.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

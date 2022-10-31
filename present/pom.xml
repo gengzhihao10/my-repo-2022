@@ -12,4 +12,24 @@
     <artifactId>present</artifactId>
 
 
+    <dependencies>
+        <!--模块依赖-->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>business</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>middleware</artifactId>
+        </dependency>
+
+        <!--框架依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>

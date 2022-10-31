@@ -1,4 +1,4 @@
-package my.repo.boot;
+package my.repo.present.boot;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

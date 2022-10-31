@@ -12,7 +12,13 @@
     <artifactId>infrastructure</artifactId>
 
     <dependencies>
+        <!--模块依赖-->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
 
+        <!--框架依赖-->
         <!--mysql连接-->
         <dependency>
             <groupId>mysql</groupId>
@@ -20,5 +26,21 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--mybatis plus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
     </dependencies>
 </project>
