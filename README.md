@@ -9,8 +9,8 @@
 | middleware     | 中间件模块，集成中间件如es，mq等                             |
 | infrastructure | 数据库交互模块，与数据库进行交互，如mysql或redis             |
 | api            | 对外接口层模块，对外提供接口api（对外接口暂时没有用处，暂时作用为展示架构）和定义项目行为 |
-| present        | 表现层模块，包括如web接口，mq生产和消费，定时任务，外部系统facade（暂无）等 |
-| business       | 业务层，包括业务代码（个人项目，基本没有业务代码）           |
+| present        | 表现层模块，包括如web接口，定时任务等                        |
+| business       | 业务层，包括业务代码                                         |
 
 
 
