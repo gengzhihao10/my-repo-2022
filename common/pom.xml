@@ -14,10 +14,7 @@
 
     <dependencies>
         <!--模块依赖-->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
+
 
         <!--框架依赖-->
         <dependency>
@@ -30,10 +27,5 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <!--lombok-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
     </dependencies>
 </project>
