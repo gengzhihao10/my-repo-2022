@@ -21,6 +21,11 @@
             <artifactId>api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>present</artifactId>
+        </dependency>
+
         <!--框架依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

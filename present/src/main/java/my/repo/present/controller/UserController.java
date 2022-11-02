@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-public class UserController implements RestUserService {
+public class UserController {
 
     @Autowired
     private UserServcie userServcie;
 
     @PostMapping("/insert")
-    @Override
+//    @Override
     public RestResponse<UserOutput> insertUser(@RequestBody RestUserCommand restUserCommand){
         return userServcie.insertUser(restUserCommand);
     }
