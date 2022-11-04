@@ -7,7 +7,7 @@ package my.repo.common.exception;
  * @description 入参为空异常
 **/
 
-public class InputIsNullException extends RuntimeException{
+public class InputIsNullException extends MyRepoException{
 
     public InputIsNullException() {
         super();

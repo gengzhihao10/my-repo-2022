@@ -6,6 +6,7 @@ import my.repo.api.enums.ResponseCodeEnum;
 import my.repo.api.user.input.RestUserCommand;
 import my.repo.api.user.output.UserOutput;
 import my.repo.business.converter.UserConverter;
+import my.repo.common.utils.RedisUtil;
 import my.repo.infrastructure.DO.UserDO;
 import my.repo.infrastructure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserServcie {
     @Autowired
     private UserConverter  userConverter;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
 //    public  queryUserById(Long id){
 //        //todo 完善逻辑，增加出入参的转换
 //        userRepository.getById(id);
@@ -30,8 +34,11 @@ public class UserServcie {
 //    }
 
     public RestResponse<UserOutput> insertUser(RestUserCommand restUserCommand){
+
         UserDO userDO = userConverter.convert(restUserCommand);
         //todo 雪花算法生成id
+        redisUtil.set("test-key1","test-value1");
+        Object redisResult = redisUtil.get("test-key1");
 
 
         boolean result = userRepository.save(userDO);

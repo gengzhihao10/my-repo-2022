@@ -5,6 +5,7 @@ import my.repo.api.service.RestUserService;
 import my.repo.api.user.input.RestUserCommand;
 import my.repo.api.user.output.UserOutput;
 import my.repo.business.service.UserServcie;
+import my.repo.common.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserServcie userServcie;
+
+//    @Autowired
+//    private RedisUtil redisUtil;
 
     @PostMapping("/insert")
 //    @Override

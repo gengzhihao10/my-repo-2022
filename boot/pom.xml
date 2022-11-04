@@ -16,14 +16,19 @@
 
     <dependencies>
         <!--模块依赖-->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>api</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.example</groupId>-->
+<!--            <artifactId>api</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>present</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>common</artifactId>
         </dependency>
 
         <!--框架依赖-->
