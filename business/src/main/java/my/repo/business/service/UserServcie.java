@@ -1,11 +1,13 @@
 package my.repo.business.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import my.repo.api.base.RestResponse;
 import my.repo.api.enums.ResponseCodeEnum;
 import my.repo.api.user.input.RestUserCommand;
 import my.repo.api.user.output.UserOutput;
 import my.repo.business.converter.UserConverter;
+import my.repo.common.utils.JsonUtil;
 import my.repo.common.utils.RedisUtil;
 import my.repo.infrastructure.DO.UserDO;
 import my.repo.infrastructure.repository.UserRepository;
@@ -37,9 +39,7 @@ public class UserServcie {
 
         UserDO userDO = userConverter.convert(restUserCommand);
         //todo 雪花算法生成id
-        redisUtil.set("test-key1","test-value1");
-        Object redisResult = redisUtil.get("test-key1");
-
+        String json = JsonUtil.obj2Str(userDO);
 
         boolean result = userRepository.save(userDO);
         if (!result){

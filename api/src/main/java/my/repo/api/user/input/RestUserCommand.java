@@ -3,6 +3,10 @@ package my.repo.api.user.input;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import my.repo.api.base.BaseInput;
 import my.repo.common.utils.InputCheckUtil;
@@ -16,6 +20,10 @@ import java.io.Serializable;
 **/
 @Slf4j
 @ApiModel("用户写命令入参")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RestUserCommand extends BaseInput implements Serializable {
 
     private static final long serialVersionUID = 4502555364502286318L;
