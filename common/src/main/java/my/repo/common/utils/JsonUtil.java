@@ -18,7 +18,7 @@ public class JsonUtil {
         try {
             json = JSONObject.toJSONString(object);
         } catch (Exception e) {
-            log.error("json转换失败",e);
+            log.error("object转json失败",e);
             throw new JsonException(e.getMessage());
         }
         return json;
@@ -35,7 +35,7 @@ public class JsonUtil {
         try {
             object = JSONObject.parseObject(string,clazz);
         } catch (Exception e) {
-            log.error("json解析失败",e);
+            log.error("json转object失败",e);
             throw new JsonException(e.getMessage());
         }
         return object;

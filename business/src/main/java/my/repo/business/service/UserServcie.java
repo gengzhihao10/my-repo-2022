@@ -39,7 +39,6 @@ public class UserServcie {
 
         UserDO userDO = userConverter.convert(restUserCommand);
         //todo 雪花算法生成id
-        String json = JsonUtil.obj2Str(userDO);
 
         boolean result = userRepository.save(userDO);
         if (!result){
