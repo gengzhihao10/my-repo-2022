@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -68,5 +69,17 @@ public class UserOutput implements Serializable {
      */
     @ApiModelProperty("0代表未结婚，1代表已结婚")
     private Integer married;
+
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @ApiModelProperty("修改时间")
+    private Date updateTime;
 
 }

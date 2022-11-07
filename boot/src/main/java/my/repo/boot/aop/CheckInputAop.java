@@ -4,7 +4,7 @@ package my.repo.boot.aop;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import my.repo.api.base.BaseInput;
-import my.repo.common.exception.InputIsNullException;
+import my.repo.common.exception.NullInputException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -48,7 +48,7 @@ public class CheckInputAop {
                 baseInput = (BaseInput)input;
                 baseInput.check();
             }
-        } catch (InputIsNullException e) {
+        } catch (NullInputException e) {
             log.error("检查入参切面异常 ",e);
         }
 

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.Date;
 
 /**
  * 用户表(User)实体类
@@ -62,6 +63,15 @@ public class UserDO implements Serializable {
      */
     private Integer deleteYn;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
 
 }
 

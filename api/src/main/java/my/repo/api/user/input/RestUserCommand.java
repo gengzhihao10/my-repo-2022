@@ -12,6 +12,7 @@ import my.repo.api.base.BaseInput;
 import my.repo.common.utils.InputCheckUtil;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author gengzhihao
@@ -82,6 +83,17 @@ public class RestUserCommand extends BaseInput implements Serializable {
     @ApiModelProperty("0代表未结婚，1代表已结婚")
     private Integer married;
 
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @ApiModelProperty("修改时间")
+    private Date updateTime;
 
     @Override
     public void check() {
