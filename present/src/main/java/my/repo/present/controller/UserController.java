@@ -1,5 +1,7 @@
 package my.repo.present.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import my.repo.api.base.RestResponse;
 import my.repo.api.service.RestUserService;
 import my.repo.api.user.input.RestUserCommand;
@@ -12,18 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Api(value = "用户操作接口")
 @RequestMapping("/user")
-public class UserController {
+@RestController
+public class UserController implements RestUserService{
 
     @Autowired
     private UserServcie userServcie;
 
-//    @Autowired
-//    private RedisUtil redisUtil;
-
+    @ApiOperation(value = "新增用户")
     @PostMapping("/insert")
-//    @Override
+    @Override
     public RestResponse<UserOutput> insertUser(@RequestBody RestUserCommand restUserCommand){
         return userServcie.insertUser(restUserCommand);
     }

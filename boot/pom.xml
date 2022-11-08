@@ -64,6 +64,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
+
+        <!--sessions 依赖-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-session-data-redis</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 
