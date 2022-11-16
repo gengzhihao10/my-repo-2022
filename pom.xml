@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.5.6</version>
     </parent>
 
     <groupId>org.example</groupId>
@@ -50,6 +50,10 @@
         <spring-boot-starter-data-redis.version>2.5.6</spring-boot-starter-data-redis.version>
         <fastjson2.version>2.0.12</fastjson2.version>
         <spring-session-data-redis.version>2.5.6</spring-session-data-redis.version>
+        <spring-session-core.version>2.5.6</spring-session-core.version>
+        <spring-cloud-starter-openfeign.version>3.0.6</spring-cloud-starter-openfeign.version>
+        <sso-demo-api.version>1.0-SNAPSHOT</sso-demo-api.version>
+        <product-api.version>1.0.1-SNAPSHOT</product-api.version>
     </properties>
 
     <!--所有module必须指定jar名字才能继承某个依赖-->
@@ -149,7 +153,33 @@
 <!--                <artifactId>spring-session-data-redis</artifactId>-->
 <!--                <version>${spring-session-data-redis.version}</version>-->
 <!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.session</groupId>-->
+<!--                <artifactId>spring-session-core</artifactId>-->
+<!--                <version>${spring-session-core.version}</version>-->
+<!--            </dependency>-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring-cloud-starter-openfeign.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>sso-demo</groupId>
+                <artifactId>api</artifactId>
+                <version>${sso-demo-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.csair.center</groupId>
+                <artifactId>product-api</artifactId>
+                <version>${product-api.version}</version>
+            </dependency>
+
         </dependencies>
+
+
     </dependencyManagement>
 
 

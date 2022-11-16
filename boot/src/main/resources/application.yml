@@ -16,3 +16,6 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+feignclient:
+  sso: localhost:9100

@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Component
 //如果有多个 可以定义来控制顺序 数字越小执行顺序靠前
-@Order(1)
+@Order(10)
 public class CheckInputAop {
 
 
