@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Api(value = "订单操作接口")
-@RequestMapping("/order")
 public interface OrderApiServcie {
 
 
     @ApiOperation(value = "新增订单")
-    @PostMapping("/insert")
+    @PostMapping("/order/insert")
     RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput);
 
 
