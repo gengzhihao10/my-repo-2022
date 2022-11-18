@@ -1,6 +1,7 @@
 package my.repo.present.controller;
 
 import io.swagger.annotations.ApiOperation;
+import my.repo.api.anotation.NeedToken;
 import my.repo.api.base.RestResponse;
 import my.repo.api.order.input.RestOrderCommandInput;
 import my.repo.api.order.output.OrderCommandOutput;
@@ -18,6 +19,7 @@ public class OrderController implements OrderApiServcie {
     private OrderService orderService;
 
     @Override
+    @NeedToken
     public RestResponse<OrderCommandOutput> insertOrder(@RequestBody RestOrderCommandInput restOrderCommandInput){
         return orderService.insertOrder(restOrderCommandInput);
     }

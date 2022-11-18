@@ -27,7 +27,7 @@ public class CheckInputAop {
     public void checkControllerInput2() {
     }
 
-    @Pointcut("@annotation(my.repo.boot.anotation.CheckInput)")
+    @Pointcut("@annotation(my.repo.api.anotation.CheckInput)")
     public void checkControllerInput3() {
     }
 

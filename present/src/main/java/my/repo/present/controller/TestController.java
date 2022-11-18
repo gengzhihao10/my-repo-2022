@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sso.demo.api.base.SSOResponse;
-import sso.demo.api.token.input.RestTokenCommand;
+import sso.demo.api.token.input.RestGenerateTokenCommand;
 import sso.demo.api.token.output.TokenCommandOutput;
 
 @RequestMapping("/test")
@@ -19,7 +19,7 @@ public class TestController {
     private SSOFeignClient ssoFeignClient;
 
     @PostMapping("/feign")
-    public SSOResponse<TokenCommandOutput> test(@RequestBody RestTokenCommand restTokenCommand){
+    public SSOResponse<TokenCommandOutput> test(@RequestBody RestGenerateTokenCommand restTokenCommand){
         SSOResponse<TokenCommandOutput> response = ssoFeignClient.generateToken(restTokenCommand);
         return response;
     }
