@@ -3,6 +3,8 @@ package my.repo.infrastructure.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import my.repo.infrastructure.DO.OrderDO;
 
+import java.util.Date;
+
 
 /**
  * @author gengzhihao
@@ -11,4 +13,6 @@ import my.repo.infrastructure.DO.OrderDO;
 **/
 
 public interface OrderRepository extends IService<OrderDO> {
+
+    boolean updateByIdAndUpdateTime(OrderDO orderDO, Date updateTime);
 }

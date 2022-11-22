@@ -23,4 +23,11 @@ public class OrderController implements OrderApiServcie {
     public RestResponse<OrderCommandOutput> insertOrder(@RequestBody RestOrderCommandInput restOrderCommandInput){
         return orderService.insertOrder(restOrderCommandInput);
     }
+
+    @Override
+    @NeedToken
+    public RestResponse<OrderCommandOutput> updateOrder(@RequestBody RestOrderCommandInput restOrderCommandInput) {
+        return orderService.updateOrder(restOrderCommandInput);
+    }
+
 }

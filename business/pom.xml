@@ -23,10 +23,7 @@
             <artifactId>middleware</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>api</artifactId>
-        </dependency>
+
 
         <!--框架依赖-->
         <dependency>
