@@ -54,6 +54,7 @@
         <spring-cloud-starter-openfeign.version>3.0.6</spring-cloud-starter-openfeign.version>
         <sso-demo-api.version>1.0-SNAPSHOT</sso-demo-api.version>
         <product-api.version>1.0.1-SNAPSHOT</product-api.version>
+        <jedis.version>2.9.0</jedis.version>
     </properties>
 
     <!--所有module必须指定jar名字才能继承某个依赖-->
@@ -157,6 +158,12 @@
                 <groupId>sso-demo</groupId>
                 <artifactId>api</artifactId>
                 <version>${sso-demo-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
             </dependency>
 
         </dependencies>

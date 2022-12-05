@@ -1,13 +1,21 @@
 package my.repo.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import redis.clients.jedis.Jedis;
 
 @Configuration
 public class RedisConfig {
+
+    @Value("${spring.redis.host}")
+    private String redisIp;
+
+    @Value("${spring.redis.port}")
+    private Integer redisPort;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -24,6 +32,11 @@ public class RedisConfig {
         template.setHashValueSerializer(RedisSerializer.json());
         template.afterPropertiesSet();
         return template;
+    }
+
+    @Bean
+    public Jedis jedis() {
+        return new Jedis(redisIp,redisPort);
     }
 
 }
