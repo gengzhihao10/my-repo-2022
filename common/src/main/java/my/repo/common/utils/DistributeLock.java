@@ -10,6 +10,9 @@ public abstract class DistributeLock implements Lock {
 
     protected String lockKey;
 
+    public DistributeLock(){
+    }
+
     public DistributeLock(String lockKey){
         this.lockKey = lockKey;
     }

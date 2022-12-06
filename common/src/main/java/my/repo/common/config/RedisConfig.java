@@ -7,6 +7,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 public class RedisConfig {
@@ -16,6 +18,15 @@ public class RedisConfig {
 
     @Value("${spring.redis.port}")
     private Integer redisPort;
+
+    @Value(("${spring.jedis.max-idle}"))
+    private Integer maxIdle;
+
+    @Value(("${spring.jedis.max-total}"))
+    private Integer maxTotal;
+
+    @Value(("${spring.jedis.max-wait-millis}"))
+    private Long maxWaitMillis;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -35,8 +46,13 @@ public class RedisConfig {
     }
 
     @Bean
-    public Jedis jedis() {
-        return new Jedis(redisIp,redisPort);
+    public JedisPool jedisPool() {
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig,redisIp,redisPort);
+        return jedisPool;
     }
 
 }

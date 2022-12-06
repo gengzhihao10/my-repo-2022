@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
+import javax.annotation.Resource;
 import java.time.LocalTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,7 +20,6 @@ import static my.repo.common.consts.RedisDistributeConsts.*;
 @Slf4j
 public class RedisDistributeLock extends DistributeLock{
 
-    @Autowired
     private Jedis jedis;
 
     volatile Thread curThread;
@@ -35,14 +35,15 @@ public class RedisDistributeLock extends DistributeLock{
     protected volatile boolean isOpenExpirationRenewal = true;
 
     //构造函数
-    public RedisDistributeLock(String lockKey) {
-        this(lockKey,UUID.randomUUID().toString()+Thread.currentThread().getId());
+    public RedisDistributeLock(String lockKey,Jedis jedis) {
+        this(lockKey,UUID.randomUUID().toString()+Thread.currentThread().getId(),jedis);
 
     }
 
-    public RedisDistributeLock(String lockKey, String lockValue) {
-        super(lockKey);
+    public RedisDistributeLock(String lockKey, String lockValue,Jedis jedis) {
+        this.lockKey = lockKey;
         this.lockValue = lockValue;
+        this.jedis = jedis;
     }
 
     
@@ -53,31 +54,39 @@ public class RedisDistributeLock extends DistributeLock{
     **/
     @Override
     public void lock() {
+        log.info("分布式锁 lock开始 lockKey为 {}",lockKey);
         //通过CAS实现可重入锁
+        //atomicInteger表示是否有过加锁行为，没有加锁过的为默认值0，不走while中的逻辑；加锁过的为1，走while中的逻辑。
         while (!atomicInteger.compareAndSet(0, 1)) {
+            //情况1，如果来加锁的线程B，发现已经加锁了，并且不是最开始加锁的线程A，那么不增加可重入计数count。
+            //情况2，如果来加锁的线程A，发现已经加锁了，并且是最开始加锁的线程A，那么增加可重入计数count，不对其持有的锁做改动
             if (curThread == Thread.currentThread()) {
                 count += 1;
-                //加锁，lock
-                while (true) {
-                    String result = jedis.set(lockKey, lockValue, NOT_EXIST, SECONDS, 30);
-                    if (OK.equals(result)) {
-                        log.info("线程id: {} ，加锁成功!时间: {}", Thread.currentThread().getId() ,LocalTime.now());
-
-                        //开启定时刷新过期时间
-                        isOpenExpirationRenewal = true;
-                        scheduleExpirationRenewal();
-                        break;
-                    }
-                    log.info("线程id: {}, 获取锁失败，休眠10秒，时间: {}" ,Thread.currentThread().getId(),LocalTime.now());
-                    //休眠10秒
-                    sleepBySencond(10);
-                }
                 return;
             }
+            //情况1里的B线程，重新回去竞争锁
             Thread.yield();//让出cpu,但是还在竞争队列里
         }
+        //情况2，没有加锁过的线程A，走这里的逻辑
+        //指定当前线程curThread和可重入次数count
         curThread = Thread.currentThread();
         count = 1;
+        //加锁，lock
+        while (true) {
+            String result = jedis.set(lockKey, lockValue, NOT_EXIST, SECONDS, 30);
+            if (OK.equals(result)) {
+                log.info("线程id: {} ，加锁成功!时间: {}", Thread.currentThread().getId() ,LocalTime.now());
+
+                //开启定时刷新过期时间
+                isOpenExpirationRenewal = true;
+                scheduleExpirationRenewal();
+                break;
+            }
+            log.info("线程id: {}, 获取锁失败，休眠10秒，时间: {}" ,Thread.currentThread().getId(),LocalTime.now());
+            //休眠10秒
+            sleepBySencond(10);
+        }
+        log.info("分布式锁 lock结束 lockKey为 {},lockValue为 {}",lockKey,lockValue);
     }
 
 
@@ -88,22 +97,27 @@ public class RedisDistributeLock extends DistributeLock{
     **/
     @Override
     public void unlock() {
+        log.info("分布式锁 unlock开始 lockKey为 {}",lockKey);
+        //不是当前线程，不能解锁
         if (curThread != Thread.currentThread()) {
             return;
         }
+        //重入次数-1
         count -= 1;
+        //如果重入次数为0，则应该进行解锁操作
         if (count == 0) {
             curThread = null;
             atomicInteger.set(0);
+            // 使用lua脚本进行原子删除操作
+            String checkAndDelScript = "if redis.call('get', KEYS[1]) == ARGV[1] then " +
+                    "return redis.call('del', KEYS[1]) " +
+                    "else " +
+                    "return 0 " +
+                    "end";
+            jedis.eval(checkAndDelScript, 1, lockKey, lockValue);
+            isOpenExpirationRenewal = false;
+            log.info("分布式锁 unlock结束 lockKey为 {}, lockValue为 {}",lockKey,lockValue);
         }
-        // 使用lua脚本进行原子删除操作
-        String checkAndDelScript = "if redis.call('get', KEYS[1]) == ARGV[1] then " +
-                "return redis.call('del', KEYS[1]) " +
-                "else " +
-                "return 0 " +
-                "end";
-        jedis.eval(checkAndDelScript, 1, lockKey, lockValue);
-        isOpenExpirationRenewal = false;
     }
 
 
@@ -130,7 +144,13 @@ public class RedisDistributeLock extends DistributeLock{
                         "return redis.call('expire',KEYS[1],ARGV[2]) " +
                         "else " +
                         "return 0 end";
-                jedis.eval(checkAndExpireScript, 1, lockKey, lockValue, "30");
+                long result = (long)jedis.eval(checkAndExpireScript, 1, lockKey, lockValue, "30");
+                log.info("执行失效时间结果为 {}",result);
+                if (1L == result){
+                    log.info("分布式锁延时30秒, key为 {}",lockKey);
+                }else if (0L == result){
+                    log.info("分布式锁延时失败");
+                }
 
                 //休眠10秒
                 sleepBySencond(10);
