@@ -159,7 +159,8 @@ public class RedisDistributeLock extends DistributeLock{
     }
     
 
-    private void sleepBySencond(int sencond){
+    @Override
+    public void sleepBySencond(int sencond){
         try {
             Thread.sleep(sencond*1000);
         } catch (InterruptedException e) {

@@ -3,6 +3,7 @@ package my.repo.present.controller;
 import lombok.extern.slf4j.Slf4j;
 import my.repo.api.base.RestResponse;
 import my.repo.api.order.input.RestOrderCommandInput;
+import my.repo.common.utils.DistributeLock;
 import my.repo.common.utils.JsonUtil;
 import my.repo.common.utils.RedisDistributeLock;
 import my.repo.common.utils.RedisUtil;
@@ -18,6 +19,9 @@ import sso.demo.api.base.SSOResponse;
 import sso.demo.api.token.input.RestGenerateTokenCommand;
 import sso.demo.api.token.output.TokenCommandOutput;
 
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 @RequestMapping("/test")
@@ -49,28 +53,61 @@ public class TestController {
 //                "return 0 end";
 //        Object result = jedis.eval(checkAndExpireScript, 1, "test-key", "test-value", "30");
 //        log.info("测试结果为 {}", JsonUtil.obj2Str(result));
-        //获取jedis
-        Jedis jedis = jedisPool.getResource();
-        Lock lock1 = new RedisDistributeLock("1",jedis);
-        lock1.lock();
 
+        //定义线程池
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(0, 10,
+                1, TimeUnit.SECONDS,
+                new SynchronousQueue<>());
 
-        try {
-            //do something
-            log.info("做点什么");
-            log.info("做点什么");
-            log.info("做点什么");
-            log.info("做点什么");
-            log.info("做点什么");
-        } catch (Exception e) {
-            log.info("发生异常",e);
-        } finally {
-            lock1.unlock();
-            //归还jedis
-            if (jedis != null){
-                jedis.close();
-            }
+        //添加10个线程获取锁
+        for (int i = 0; i < 10; i++) {
+            pool.submit(() -> {
+                Jedis jedis = null;
+                try {
+                    jedis = jedisPool.getResource();
+                    DistributeLock lock = new RedisDistributeLock("1",jedis);
+                    lock.lock();
+
+                    //模拟业务执行15秒
+                    lock.sleepBySencond(15);
+
+                    lock.unlock();
+                } catch (Exception e){
+                    log.info("发生异常 ",e);
+                }finally {
+                    //归还jedis
+                    if (jedis != null){
+                        jedis.close();
+                    }
+                }
+            });
         }
+
+        //当线程池中的线程数为0时，退出
+        while (pool.getPoolSize() != 0) {}
+
+//        //获取jedis
+//        Jedis jedis = jedisPool.getResource();
+//        Lock lock1 = new RedisDistributeLock("1",jedis);
+//        lock1.lock();
+//
+//
+//        try {
+//            //do something
+//            log.info("做点什么");
+//            log.info("做点什么");
+//            log.info("做点什么");
+//            log.info("做点什么");
+//            log.info("做点什么");
+//        } catch (Exception e) {
+//            log.info("发生异常",e);
+//        } finally {
+//            lock1.unlock();
+//            //归还jedis
+//            if (jedis != null){
+//                jedis.close();
+//            }
+//        }
 
     }
 }

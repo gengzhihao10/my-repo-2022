@@ -18,7 +18,7 @@ public abstract class DistributeLock implements Lock {
     }
 
 
-    private void sleepBySencond(int sencond){
+    public void sleepBySencond(int sencond){
         try {
             Thread.sleep(sencond*1000);
         } catch (InterruptedException e) {
