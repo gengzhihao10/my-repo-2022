@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import my.repo.api.base.BaseInput;
+import my.repo.api.consts.BaseConsts;
 import my.repo.api.consts.PageUrlConsts;
 import my.repo.present.feign.SSOFeignClient;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +40,6 @@ public class TokenAop {
     @Autowired
     private SSOFeignClient ssoFeignClient;
 
-    private static final String TOKEN_FIELD_NAME = "token";
-
     private static final String USERNAME_FIELD_NAME = "userName";
 
     @Pointcut("@annotation(my.repo.api.anotation.NeedToken)")
@@ -56,7 +55,7 @@ public class TokenAop {
         ServletRequestAttributes sra = (ServletRequestAttributes) ra;
         HttpServletRequest request = sra.getRequest();
         HttpServletResponse response = sra.getResponse();
-        String token = request.getHeader(TOKEN_FIELD_NAME);
+        String token = request.getHeader(BaseConsts.TOKEN_FIELD_NAME);
         String userName = request.getHeader(USERNAME_FIELD_NAME);
         //token为空，直接重定向到登陆页
         if (StringUtils.isBlank(token) || StringUtils.isBlank(userName)){

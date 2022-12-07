@@ -11,4 +11,6 @@ public class BaseConsts {
 
     public static final int UPDATE_SUCCESS = 1;
     public static final int UPDATE_FAILED = 0;
+
+    public static final String TOKEN_FIELD_NAME = "token";
 }

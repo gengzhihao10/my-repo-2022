@@ -9,13 +9,20 @@ import my.repo.api.order.output.OrderCommandOutput;
 import my.repo.business.converter.OrderConverter;
 import my.repo.common.utils.IDUtil;
 import my.repo.common.utils.JsonUtil;
+import my.repo.common.utils.RedisDistributeLock;
 import my.repo.common.utils.RedisUtil;
 import my.repo.infrastructure.DO.OrderDO;
 import my.repo.infrastructure.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+
+import static my.repo.api.consts.BaseConsts.TOKEN_FIELD_NAME;
 
 @Slf4j
 @Component
@@ -31,8 +38,14 @@ public class OrderService {
     @Autowired
     private RedisUtil redisUtil;
 
-    public RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput){
-        //todo 做幂等
+    @Autowired
+    private JedisPool jedisPool;
+
+    public RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput, HttpServletRequest request){
+        //依据分布式锁，做插入接口的幂等
+        String token = request.getHeader(TOKEN_FIELD_NAME);
+        Jedis jedis = jedisPool.getResource();
+        Lock lock = new RedisDistributeLock(token,jedis);
 
         OrderDO orderDO = orderConverter.convert(restOrderCommandInput);
 
@@ -43,10 +56,17 @@ public class OrderService {
         orderDO.setUpdateTime(new Date());
 
         boolean result = false;
+        lock.lock();
         try {
             result = orderRepository.save(orderDO);
         } catch (Exception e) {
             log.error("保存订单发生异常，",e);
+        }finally {
+            lock.unlock();
+            //归还jedis
+            if (jedis != null){
+                jedis.close();
+            }
         }
 
         if (!result){

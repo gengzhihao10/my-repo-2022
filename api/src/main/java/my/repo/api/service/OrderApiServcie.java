@@ -8,13 +8,15 @@ import my.repo.api.order.output.OrderCommandOutput;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Api(value = "订单操作接口")
 public interface OrderApiServcie {
 
 
     @ApiOperation(value = "新增订单")
     @PostMapping("/order/insert")
-    RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput);
+    RestResponse<OrderCommandOutput> insertOrder(HttpServletRequest request, RestOrderCommandInput restOrderCommandInput);
 
     @ApiOperation(value = "修改订单")
     @PostMapping("/order/update")
