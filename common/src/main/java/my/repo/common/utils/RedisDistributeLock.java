@@ -2,10 +2,9 @@ package my.repo.common.utils;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import redis.clients.jedis.Jedis;
 
-import javax.annotation.Resource;
 import java.time.LocalTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,6 +33,10 @@ public class RedisDistributeLock extends DistributeLock{
 
     protected volatile boolean isOpenExpirationRenewal = true;
 
+//    @Autowired
+//    private ExpirationRenewalService expirationRenewalService = new ExpirationRenewalService();
+
+
     //构造函数
     public RedisDistributeLock(String lockKey,Jedis jedis) {
         this(lockKey,UUID.randomUUID().toString()+Thread.currentThread().getId(),jedis);
@@ -53,8 +56,10 @@ public class RedisDistributeLock extends DistributeLock{
      * @description 获得分布式锁。
     **/
     @Override
+    @Async
     public void lock() {
         log.info("分布式锁 lock开始 lockKey为 {}",lockKey);
+//        log.info("超时对象的引用为 {}",expirationRenewalService.hashCode());
         //通过CAS实现可重入锁
         //atomicInteger表示是否有过加锁行为，没有加锁过的为默认值0，不走while中的逻辑；加锁过的为1，走while中的逻辑。
         while (!atomicInteger.compareAndSet(0, 1)) {
@@ -78,8 +83,9 @@ public class RedisDistributeLock extends DistributeLock{
                 log.info("线程id: {} ，加锁成功!时间: {}", Thread.currentThread().getId() ,LocalTime.now());
 
                 //开启定时刷新过期时间
-                isOpenExpirationRenewal = true;
-                scheduleExpirationRenewal();
+//                expirationRenewalService.setOpenExpirationRenewal(true);
+//                expirationRenewalService.scheduleExpirationRenewal(jedis,lockKey,lockValue);
+
                 break;
             }
             log.info("线程id: {}, 获取锁失败，休眠10秒，时间: {}" ,Thread.currentThread().getId(),LocalTime.now());
@@ -115,7 +121,8 @@ public class RedisDistributeLock extends DistributeLock{
                     "return 0 " +
                     "end";
             jedis.eval(checkAndDelScript, 1, lockKey, lockValue);
-            isOpenExpirationRenewal = false;
+            //解除线程对key延长时间的刷新
+//            expirationRenewalService.setOpenExpirationRenewal(false);
             log.info("分布式锁 unlock结束 lockKey为 {}, lockValue为 {}",lockKey,lockValue);
         }
     }
@@ -124,11 +131,36 @@ public class RedisDistributeLock extends DistributeLock{
 
     /**
      * 开启定时刷新
-     */
+//     */
+//    @Async("threadPoolTaskExecutor")
     protected void scheduleExpirationRenewal() {
-        //todo 这里应该引入一个线程池，来控制线程的获取和归还
         Thread renewalThread = new Thread(new ExpirationRenewal());
         renewalThread.start();
+
+//        threadPoolTaskExecutor.submit(
+//                () -> {
+//                    while (isOpenExpirationRenewal) {
+//                        log.info("执行延迟失效时间中...");
+//
+//                        String checkAndExpireScript = "if redis.call('get', KEYS[1]) == ARGV[1] then " +
+//                                "return redis.call('expire',KEYS[1],ARGV[2]) " +
+//                                "else " +
+//                                "return 0 end";
+//                        long result = (long)jedis.eval(checkAndExpireScript, 1, lockKey, lockValue, "30");
+//                        log.info("执行失效时间结果为 {}",result);
+//                        if (1L == result){
+//                            log.info("分布式锁延时30秒, key为 {}",lockKey);
+//                        }else if (0L == result){
+//                            log.info("分布式锁延时失败");
+//                        }
+//
+//                        //休眠10秒
+//                        sleepBySencond(10);
+//                    }
+//                    log.info("跳出循环！！！");
+//                }
+//        );
+
     }
 
     /**

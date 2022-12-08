@@ -1,12 +1,8 @@
 package my.repo.present.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import my.repo.api.base.RestResponse;
 import my.repo.api.order.input.RestOrderCommandInput;
-import my.repo.common.utils.DistributeLock;
-import my.repo.common.utils.JsonUtil;
-import my.repo.common.utils.RedisDistributeLock;
-import my.repo.common.utils.RedisUtil;
+import my.repo.common.utils.*;
 import my.repo.present.feign.SSOFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +15,6 @@ import sso.demo.api.base.SSOResponse;
 import sso.demo.api.token.input.RestGenerateTokenCommand;
 import sso.demo.api.token.output.TokenCommandOutput;
 
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 @RequestMapping("/test")
@@ -37,6 +30,13 @@ public class TestController {
 
     @Autowired
     private JedisPool jedisPool;
+
+//    @Autowired
+//    private ExpirationRenewalTask expirationRenewalTask;
+
+
+//    @Autowired
+//    private ScheduleExpirationRenewalServiceTest test;
 
     @PostMapping("/feign")
     public SSOResponse<TokenCommandOutput> test(@RequestBody RestGenerateTokenCommand restTokenCommand){
@@ -87,8 +87,13 @@ public class TestController {
 //        //当线程池中的线程数为0时，退出
 //        while (pool.getPoolSize() != 0) {}
 
+//        TestApi testApi = new TestApi();
+//        testApi.test();
+
+//        expirationRenewalService.scheduleExpirationRenewal(true);
         //获取jedis
         Jedis jedis = jedisPool.getResource();
+//        expirationRenewalService.scheduleExpirationRenewal(jedis,"test-key","test-value");
         Lock lock1 = new RedisDistributeLock("1",jedis);
         lock1.lock();
         lock1.lock();

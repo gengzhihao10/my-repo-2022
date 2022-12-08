@@ -1,6 +1,7 @@
 package my.repo.present.controller;
 
 import io.swagger.annotations.ApiOperation;
+import my.repo.api.anotation.IdempotentByToken;
 import my.repo.api.anotation.NeedToken;
 import my.repo.api.base.RestResponse;
 import my.repo.api.order.input.RestOrderCommandInput;
@@ -22,8 +23,9 @@ public class OrderController implements OrderApiServcie {
 
     @Override
     @NeedToken
-    public RestResponse<OrderCommandOutput> insertOrder(HttpServletRequest request, @RequestBody RestOrderCommandInput restOrderCommandInput){
-        return orderService.insertOrder(restOrderCommandInput,request);
+    @IdempotentByToken
+    public RestResponse<OrderCommandOutput> insertOrder(@RequestBody RestOrderCommandInput restOrderCommandInput){
+        return orderService.insertOrder(restOrderCommandInput);
     }
 
     @Override

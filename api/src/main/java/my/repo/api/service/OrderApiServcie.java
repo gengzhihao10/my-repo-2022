@@ -16,7 +16,7 @@ public interface OrderApiServcie {
 
     @ApiOperation(value = "新增订单")
     @PostMapping("/order/insert")
-    RestResponse<OrderCommandOutput> insertOrder(HttpServletRequest request, RestOrderCommandInput restOrderCommandInput);
+    RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput);
 
     @ApiOperation(value = "修改订单")
     @PostMapping("/order/update")

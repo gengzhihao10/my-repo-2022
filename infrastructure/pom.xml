@@ -13,10 +13,10 @@
 
     <dependencies>
         <!--模块依赖-->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.example</groupId>-->
+<!--            <artifactId>common</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.example</groupId>

@@ -41,11 +41,7 @@ public class OrderService {
     @Autowired
     private JedisPool jedisPool;
 
-    public RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput, HttpServletRequest request){
-        //依据分布式锁，做插入接口的幂等
-        String token = request.getHeader(TOKEN_FIELD_NAME);
-        Jedis jedis = jedisPool.getResource();
-        Lock lock = new RedisDistributeLock(token,jedis);
+    public RestResponse<OrderCommandOutput> insertOrder(RestOrderCommandInput restOrderCommandInput){
 
         OrderDO orderDO = orderConverter.convert(restOrderCommandInput);
 
@@ -56,17 +52,10 @@ public class OrderService {
         orderDO.setUpdateTime(new Date());
 
         boolean result = false;
-        lock.lock();
         try {
             result = orderRepository.save(orderDO);
         } catch (Exception e) {
             log.error("保存订单发生异常，",e);
-        }finally {
-            lock.unlock();
-            //归还jedis
-            if (jedis != null){
-                jedis.close();
-            }
         }
 
         if (!result){
